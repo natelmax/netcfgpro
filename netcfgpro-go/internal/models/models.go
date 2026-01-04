@@ -77,22 +77,22 @@ const (
 
 // Interface represents a network interface configuration.
 type Interface struct {
-	Name              string          `json:"name"`
-	Type              InterfaceType   `json:"interface_type"`
-	Description       string          `json:"description,omitempty"`
-	IPAddress         *string         `json:"ip_address,omitempty"`
-	SubnetMask        *string         `json:"subnet_mask,omitempty"`
-	Enabled           *bool           `json:"enabled,omitempty"`
-	Speed             *string         `json:"speed,omitempty"`
-	Duplex            *string         `json:"duplex,omitempty"`
-	MTU               int             `json:"mtu,omitempty"`
-	SwitchportMode    *SwitchportMode `json:"switchport_mode,omitempty"`
-	AccessVLAN        *int            `json:"access_vlan,omitempty"`
-	VoiceVLAN         *int            `json:"voice_vlan,omitempty"`
-	TrunkAllowedVLANs *string         `json:"trunk_allowed_vlans,omitempty"`
-	TrunkNativeVLAN   *int            `json:"trunk_native_vlan,omitempty"`
-	ChannelGroup      *int            `json:"channel_group,omitempty"`
-	ChannelGroupMode  *string         `json:"channel_group_mode,omitempty"`
+	Name              string         `json:"name"`
+	Type              InterfaceType  `json:"interface_type"`
+	Description       string         `json:"description,omitempty"`
+	IPAddress         *string        `json:"ip_address,omitempty"`
+	SubnetMask        *string        `json:"subnet_mask,omitempty"`
+	Enabled           *bool          `json:"enabled,omitempty"`
+	Speed             *string        `json:"speed,omitempty"`
+	Duplex            *string        `json:"duplex,omitempty"`
+	MTU               int            `json:"mtu,omitempty"`
+	SwitchportMode    SwitchportMode `json:"switchport_mode,omitempty"`
+	AccessVLAN        *int           `json:"access_vlan,omitempty"`
+	VoiceVLAN         *int           `json:"voice_vlan,omitempty"`
+	TrunkAllowedVLANs *string        `json:"trunk_allowed_vlans,omitempty"`
+	TrunkNativeVLAN   *int           `json:"trunk_native_vlan,omitempty"`
+	ChannelGroup      *int           `json:"channel_group,omitempty"`
+	ChannelGroupMode  *string        `json:"channel_group_mode,omitempty"`
 }
 
 // NewInterface creates a new Interface with default values.
@@ -102,6 +102,94 @@ func NewInterface() *Interface {
 		Enabled: &enabled,
 		MTU:     1500,
 	}
+}
+
+// GetIsEnabled returns the value of the Enabled pointer, defaulting to true if nil.
+func (i *Interface) GetIsEnabled() bool {
+	if i.Enabled == nil {
+		return true // Default to enabled
+	}
+	return *i.Enabled
+}
+
+// GetIPAddress returns the value of IPAddress, or an empty string if nil.
+func (i *Interface) GetIPAddress() string {
+	if i.IPAddress == nil {
+		return ""
+	}
+	return *i.IPAddress
+}
+
+// GetSubnetMask returns the value of SubnetMask, or an empty string if nil.
+func (i *Interface) GetSubnetMask() string {
+	if i.SubnetMask == nil {
+		return ""
+	}
+	return *i.SubnetMask
+}
+
+// GetSpeed returns the value of Speed, or an empty string if nil.
+func (i *Interface) GetSpeed() string {
+	if i.Speed == nil {
+		return ""
+	}
+	return *i.Speed
+}
+
+// GetDuplex returns the value of Duplex, or an empty string if nil.
+func (i *Interface) GetDuplex() string {
+	if i.Duplex == nil {
+		return ""
+	}
+	return *i.Duplex
+}
+
+// GetAccessVLAN returns the value of AccessVLAN, or 0 if nil.
+func (i *Interface) GetAccessVLAN() int {
+	if i.AccessVLAN == nil {
+		return 0
+	}
+	return *i.AccessVLAN
+}
+
+// GetVoiceVLAN returns the value of VoiceVLAN, or 0 if nil.
+func (i *Interface) GetVoiceVLAN() int {
+	if i.VoiceVLAN == nil {
+		return 0
+	}
+	return *i.VoiceVLAN
+}
+
+// GetTrunkAllowedVLANs returns the value of TrunkAllowedVLANs, or an empty string if nil.
+func (i *Interface) GetTrunkAllowedVLANs() string {
+	if i.TrunkAllowedVLANs == nil {
+		return ""
+	}
+	return *i.TrunkAllowedVLANs
+}
+
+// GetTrunkNativeVLAN returns the value of TrunkNativeVLAN, or 0 if nil.
+func (i *Interface) GetTrunkNativeVLAN() int {
+	if i.TrunkNativeVLAN == nil {
+		return 0
+	}
+	return *i.TrunkNativeVLAN
+}
+
+// GetChannelGroup returns the value of ChannelGroup, or 0 if nil.
+func (i *Interface) GetChannelGroup() int {
+	if i.ChannelGroup == nil {
+		return 0
+	}
+	return *i.ChannelGroup
+}
+
+// GetChannelGroupMode returns the value of ChannelGroupMode, or an empty string if nil.
+func (i *Interface) GetChannelGroupMode() string {
+	if i.ChannelGroupMode == nil {
+		return ""
+	}
+	return *i.ChannelGroupMode
 }
 
 // Validate checks the interface configuration for correctness.
@@ -165,6 +253,22 @@ func NewACLEntry() *ACLEntry {
 	}
 }
 
+// GetSourcePort returns the value of SourcePort, or an empty string if nil.
+func (e *ACLEntry) GetSourcePort() string {
+	if e.SourcePort == nil {
+		return ""
+	}
+	return *e.SourcePort
+}
+
+// GetDestinationPort returns the value of DestinationPort, or an empty string if nil.
+func (e *ACLEntry) GetDestinationPort() string {
+	if e.DestinationPort == nil {
+		return ""
+	}
+	return *e.DestinationPort
+}
+
 // Validate checks the ACL entry for correctness.
 func (e *ACLEntry) Validate() error {
 	if e.Sequence <= 0 {
@@ -186,6 +290,14 @@ func NewACL() *ACL {
 	return &ACL{
 		IsExtended: &isExtended,
 	}
+}
+
+// GetIsExtended returns the value of the IsExtended pointer, defaulting to true if nil.
+func (a *ACL) GetIsExtended() bool {
+	if a.IsExtended == nil {
+		return true // Default to extended
+	}
+	return *a.IsExtended
 }
 
 // Validate checks the ACL and all its entries for correctness.
@@ -247,6 +359,14 @@ func NewOSPFConfig() *OSPFConfig {
 	}
 }
 
+// GetRouterID returns the value of RouterID, or an empty string if nil.
+func (o *OSPFConfig) GetRouterID() string {
+	if o.RouterID == nil {
+		return ""
+	}
+	return *o.RouterID
+}
+
 // Validate checks the OSPF configuration for correctness.
 func (o *OSPFConfig) Validate() error {
 	if o.ProcessID < 0 || o.ProcessID > 65535 {
@@ -265,6 +385,38 @@ type BGPNeighbor struct {
 	EBGPmultihop int     `json:"ebgp_multihop,omitempty"`
 	RouteMapIn   *string `json:"route_map_in,omitempty"`
 	RouteMapOut  *string `json:"route_map_out,omitempty"`
+}
+
+// GetPassword returns the value of Password, or an empty string if nil.
+func (n *BGPNeighbor) GetPassword() string {
+	if n.Password == nil {
+		return ""
+	}
+	return *n.Password
+}
+
+// GetUpdateSource returns the value of UpdateSource, or an empty string if nil.
+func (n *BGPNeighbor) GetUpdateSource() string {
+	if n.UpdateSource == nil {
+		return ""
+	}
+	return *n.UpdateSource
+}
+
+// GetRouteMapIn returns the value of RouteMapIn, or an empty string if nil.
+func (n *BGPNeighbor) GetRouteMapIn() string {
+	if n.RouteMapIn == nil {
+		return ""
+	}
+	return *n.RouteMapIn
+}
+
+// GetRouteMapOut returns the value of RouteMapOut, or an empty string if nil.
+func (n *BGPNeighbor) GetRouteMapOut() string {
+	if n.RouteMapOut == nil {
+		return ""
+	}
+	return *n.RouteMapOut
 }
 
 // Validate checks the BGP neighbor for correctness.
@@ -296,6 +448,22 @@ func NewBGPConfig() *BGPConfig {
 	}
 }
 
+// GetRouterID returns the value of RouterID, or an empty string if nil.
+func (b *BGPConfig) GetRouterID() string {
+	if b.RouterID == nil {
+		return ""
+	}
+	return *b.RouterID
+}
+
+// GetLogNeighborChanges returns the value of the LogNeighborChanges pointer, defaulting to true if nil.
+func (b *BGPConfig) GetLogNeighborChanges() bool {
+	if b.LogNeighborChanges == nil {
+		return true
+	}
+	return *b.LogNeighborChanges
+}
+
 // Validate checks the BGP configuration for correctness.
 func (b *BGPConfig) Validate() error {
 	if b.LocalAS == 0 {
@@ -313,6 +481,14 @@ func (b *BGPConfig) Validate() error {
 type EIGRPNetwork struct {
 	Network  string  `json:"network"`
 	Wildcard *string `json:"wildcard,omitempty"`
+}
+
+// GetWildcard returns the value of Wildcard, or an empty string if nil.
+func (n *EIGRPNetwork) GetWildcard() string {
+	if n.Wildcard == nil {
+		return ""
+	}
+	return *n.Wildcard
 }
 
 // EIGRPConfig represents EIGRP configuration.
@@ -334,6 +510,14 @@ func NewEIGRPConfig() *EIGRPConfig {
 	}
 }
 
+// GetRouterID returns the value of RouterID, or an empty string if nil.
+func (e *EIGRPConfig) GetRouterID() string {
+	if e.RouterID == nil {
+		return ""
+	}
+	return *e.RouterID
+}
+
 // Validate checks the EIGRP configuration for correctness.
 func (e *EIGRPConfig) Validate() error {
 	if e.ASNumber < 1 || e.ASNumber > 65535 {
@@ -349,6 +533,22 @@ type PrefixListEntry struct {
 	Prefix   string       `json:"prefix"`
 	GE       *int         `json:"ge,omitempty"`
 	LE       *int         `json:"le,omitempty"`
+}
+
+// GetGE returns the value of GE, or 0 if nil.
+func (e *PrefixListEntry) GetGE() int {
+	if e.GE == nil {
+		return 0
+	}
+	return *e.GE
+}
+
+// GetLE returns the value of LE, or 0 if nil.
+func (e *PrefixListEntry) GetLE() int {
+	if e.LE == nil {
+		return 0
+	}
+	return *e.LE
 }
 
 // Validate checks the prefix-list entry for correctness.
@@ -396,6 +596,70 @@ type RouteMapEntry struct {
 	SetWeight        *int         `json:"set_weight,omitempty"`
 }
 
+// GetMatchPrefixList returns the value of MatchPrefixList, or an empty string if nil.
+func (e *RouteMapEntry) GetMatchPrefixList() string {
+	if e.MatchPrefixList == nil {
+		return ""
+	}
+	return *e.MatchPrefixList
+}
+// GetMatchASPath returns the value of MatchASPath, or an empty string if nil.
+func (e *RouteMapEntry) GetMatchASPath() string {
+	if e.MatchASPath == nil {
+		return ""
+	}
+	return *e.MatchASPath
+}
+// GetMatchCommunity returns the value of MatchCommunity, or an empty string if nil.
+func (e *RouteMapEntry) GetMatchCommunity() string {
+	if e.MatchCommunity == nil {
+		return ""
+	}
+	return *e.MatchCommunity
+}
+// GetSetLocalPref returns the value of SetLocalPref, or 0 if nil.
+func (e *RouteMapEntry) GetSetLocalPref() int {
+	if e.SetLocalPref == nil {
+		return 0
+	}
+	return *e.SetLocalPref
+}
+// GetSetMED returns the value of SetMED, or 0 if nil.
+func (e *RouteMapEntry) GetSetMED() int {
+	if e.SetMED == nil {
+		return 0
+	}
+	return *e.SetMED
+}
+// GetSetASPathPrepend returns the value of SetASPathPrepend, or an empty string if nil.
+func (e *RouteMapEntry) GetSetASPathPrepend() string {
+	if e.SetASPathPrepend == nil {
+		return ""
+	}
+	return *e.SetASPathPrepend
+}
+// GetSetCommunity returns the value of SetCommunity, or an empty string if nil.
+func (e *RouteMapEntry) GetSetCommunity() string {
+	if e.SetCommunity == nil {
+		return ""
+	}
+	return *e.SetCommunity
+}
+// GetSetNextHop returns the value of SetNextHop, or an empty string if nil.
+func (e *RouteMapEntry) GetSetNextHop() string {
+	if e.SetNextHop == nil {
+		return ""
+	}
+	return *e.SetNextHop
+}
+// GetSetWeight returns the value of SetWeight, or 0 if nil.
+func (e *RouteMapEntry) GetSetWeight() int {
+	if e.SetWeight == nil {
+		return 0
+	}
+	return *e.SetWeight
+}
+
 // RouteMap represents a route-map for policy-based routing.
 type RouteMap struct {
 	Name    string          `json:"name"`
@@ -438,23 +702,39 @@ func (c *STPConfig) Validate() error {
 
 // DeviceConfig represents a complete device configuration.
 type DeviceConfig struct {
-	Hostname     string        `json:"hostname"`
-	Vendor       Vendor        `json:"vendor"`
-	Interfaces   []Interface   `json:"interfaces,omitempty"`
-	VLANs        []VLAN        `json:"vlans,omitempty"`
-	ACLs         []ACL         `json:"acls,omitempty"`
-	StaticRoutes []StaticRoute `json:"static_routes,omitempty"`
-	OSPF         *OSPFConfig   `json:"ospf,omitempty"`
-	EIGRP        *EIGRPConfig  `json:"eigrp,omitempty"`
-	BGP          *BGPConfig    `json:"bgp,omitempty"`
-	STP          *STPConfig    `json:"stp,omitempty"`
-	PrefixLists  []PrefixList  `json:"prefix_lists,omitempty"`
-	RouteMaps    []RouteMap    `json:"route_maps,omitempty"`
-	EnableSecret *string       `json:"enable_secret,omitempty"`
-	DomainName   *string       `json:"domain_name,omitempty"`
-	DNSServers   []string      `json:"dns_servers,omitempty"`
-	NTPServers   []string      `json:"ntp_servers,omitempty"`
-	BannerMOTD   string        `json:"banner_motd,omitempty"`
+	Hostname      string        `json:"hostname"`
+	Vendor        Vendor        `json:"vendor"`
+	Interfaces    []Interface   `json:"interfaces,omitempty"`
+	VLANs         []VLAN        `json:"vlans,omitempty"`
+	ACLs          []ACL         `json:"acls,omitempty"`
+	StaticRoutes  []StaticRoute `json:"static_routes,omitempty"`
+	OSPF          *OSPFConfig   `json:"ospf,omitempty"`
+	EIGRP         *EIGRPConfig  `json:"eigrp,omitempty"`
+	BGP           *BGPConfig    `json:"bgp,omitempty"`
+	STP           *STPConfig    `json:"stp,omitempty"`
+	PrefixLists   []PrefixList  `json:"prefix_lists,omitempty"`
+	RouteMaps     []RouteMap    `json:"route_maps,omitempty"`
+	EnableSecret  *string       `json:"enable_secret,omitempty"`
+	DomainName    *string       `json:"domain_name,omitempty"`
+	DNSServers    []string      `json:"dns_servers,omitempty"`
+	NTPServers    []string      `json:"ntp_servers,omitempty"`
+	BannerMOTD    string        `json:"banner_motd,omitempty"`
+}
+
+// GetEnableSecret returns the value of EnableSecret, or an empty string if nil.
+func (c *DeviceConfig) GetEnableSecret() string {
+	if c.EnableSecret == nil {
+		return ""
+	}
+	return *c.EnableSecret
+}
+
+// GetDomainName returns the value of DomainName, or an empty string if nil.
+func (c *DeviceConfig) GetDomainName() string {
+	if c.DomainName == nil {
+		return ""
+	}
+	return *c.DomainName
 }
 
 // Validate checks the entire device configuration for correctness.
